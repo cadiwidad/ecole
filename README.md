@@ -1,3 +1,3 @@
 # Project Name ecole
-#Developper Widad Cadi
+#Developer Widad Cadi
 #How to use Spring Security

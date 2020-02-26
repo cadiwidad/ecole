@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
@@ -37,9 +36,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		  .usersByUsernameQuery("select username,password,actived from user where username = ? "
 		  )
 		  .authoritiesByUsernameQuery("select user_username,roles_role from user_role where user_username = ?"
-		  ) .passwordEncoder(NoOpPasswordEncoder.getInstance());
+		  ).passwordEncoder(new BCryptPasswordEncoder());
 		 
 	}
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http

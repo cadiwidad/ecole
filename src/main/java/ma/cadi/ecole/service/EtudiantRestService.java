@@ -23,16 +23,18 @@ import ma.cadi.ecole.entities.Etudiant;
 @RestController
 public class EtudiantRestService {
 	@Autowired
-	EtudiantRepository etudiantRepository;
+	EtudiantRepository etudiantRepository;	
+
 	@Secured(value = {"ROLE_ADMIN","ROLE_USER"})
 	@GetMapping(value = "/listeEtudiants")
 	public Page<Etudiant> listEtudiants(int page,int size) {
 		return etudiantRepository.findAll(PageRequest.of(page, size));
 	}
 
+
 	@Secured(value = {"ROLE_ADMIN"})
 	@GetMapping(value="/ajouterEtudiant")
-	public Etudiant ajouterEtudiant(Etudiant etudiant) {
+	public Etudiant ajouterUser(Etudiant etudiant) {
 		return etudiantRepository.save(etudiant);
 	}
 	@Secured(value = {"ROLE_ADMIN"})

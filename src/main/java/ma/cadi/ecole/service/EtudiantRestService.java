@@ -15,9 +15,6 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ma.cadi.ecole.dao.EtudiantRepository;
@@ -38,6 +35,7 @@ public class EtudiantRestService {
 	public Etudiant ajouterEtudiant(Etudiant etudiant) {
 		return etudiantRepository.save(etudiant);
 	}
+	@Secured(value = {"ROLE_ADMIN","ROLE_SCOLARITE","ROLE_PROF","ROLE_ETUDIANT"})
 	@GetMapping(value="/getLogedUser")
 	public Map<String,Object> getLogedUser(HttpServletRequest httpServletRequest){
 		HttpSession httpSession=httpServletRequest.getSession();

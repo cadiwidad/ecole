@@ -3,6 +3,7 @@ package ma.cadi.ecole;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -14,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
+
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	DataSource dataSource;
@@ -36,10 +38,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		  .usersByUsernameQuery("select username,password,actived from user where username = ? "
 		  )
 		  .authoritiesByUsernameQuery("select user_username,roles_role from user_role where user_username = ?"
-		  ).passwordEncoder(new BCryptPasswordEncoder());
+		  ).passwordEncoder(encodepwd());
 		 
 	}
-
+	@Bean
+	public BCryptPasswordEncoder encodepwd() {
+		return new BCryptPasswordEncoder();
+	}
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http

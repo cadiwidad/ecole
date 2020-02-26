@@ -14,24 +14,37 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ma.cadi.ecole.dao.EtudiantRepository;
+import ma.cadi.ecole.dao.UserRepository;
 import ma.cadi.ecole.entities.Etudiant;
+import ma.cadi.ecole.entities.User;
 
 @RestController
 public class EtudiantRestService {
 	@Autowired
 	EtudiantRepository etudiantRepository;	
-
+	@Autowired
+	UserRepository userRepository;
+	@Autowired
+	BCryptPasswordEncoder passwordEncoder;
 	@Secured(value = {"ROLE_ADMIN","ROLE_USER"})
 	@GetMapping(value = "/listeEtudiants")
 	public Page<Etudiant> listEtudiants(int page,int size) {
 		return etudiantRepository.findAll(PageRequest.of(page, size));
 	}
 
-
+	@Secured(value = {"ROLE_ADMIN"})
+	@GetMapping(value="/ajouterUser")
+	public User ajouterEtudiant(User user) {
+		String pwd=user.getPassword();
+		String epwd=passwordEncoder.encode(pwd);
+		user.setPassword(epwd);
+		return userRepository.save(user);
+	}
 	@Secured(value = {"ROLE_ADMIN"})
 	@GetMapping(value="/ajouterEtudiant")
 	public Etudiant ajouterUser(Etudiant etudiant) {

@@ -10,13 +10,16 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
-	public void globalConfig(AuthenticationManagerBuilder auth,DataSource dataSource) throws Exception {
+	DataSource dataSource;
+	@Override
+	public void configure(AuthenticationManagerBuilder auth) throws Exception {
 		/*
 		 * //les donnees ici sont stockee en memoire
 		 * auth.inMemoryAuthentication().withUser("widad").password("{noop}123").roles(
@@ -31,10 +34,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		//ici les donnees sont stockee dans une base de donnes sql
 		
 		  auth.jdbcAuthentication() .dataSource(dataSource)
-		  .usersByUsernameQuery("select username,password,true as enabled from user where username = ? "
+		  .usersByUsernameQuery("select username,password,actived from user where username = ? "
 		  )
-		  .authoritiesByUsernameQuery("select user_username as username,roles_role as authority from user_role where user_username = ?"
-		  ) .passwordEncoder(new BCryptPasswordEncoder());
+		  .authoritiesByUsernameQuery("select user_username,roles_role from user_role where user_username = ?"
+		  ) .passwordEncoder(NoOpPasswordEncoder.getInstance());
 		 
 	}
 	@Override
